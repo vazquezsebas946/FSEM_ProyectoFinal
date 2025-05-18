@@ -1,0 +1,311 @@
+#:kivy 2.3.1 
+#:import Factory kivy.factory.Factory
+
+# Copyright (c) 2025 Sebastián Vázquez
+# This file is part of FSEM_ProyectoFinal and is licensed under the MIT License.
+# See the LICENSE file in the root of this repository for details.
+<WindowManager>:
+    id: manager_main
+    Caratula:
+        id: MenuCaratula
+        name: 'MenuCaratula1'
+    MenuConsolas:
+        id: Menuprincipal
+        name: 'MenuConsolas1'
+    MenuJuegos:
+        id: Menuseleccion
+        name: 'MenuJuegos1'
+       
+<EmuladorPopUp>:
+    auto_dismiss: False
+    size_hint: (0.75, 0.75)
+    pos_hint: {"center_x": 0.5, "center_y": 0.5} 
+    ScreenManager:
+        id: manager_popup
+        size: root.width, root.height
+        MenuCopiado:
+            name: 'barra_progreso'
+            id: barpro
+            popup_manager: manager_popup
+                        
+        MenuNuevosJuegos:
+            name: 'juegos_nuevos'
+            id: juenue
+
+        Apagado:
+            name: 'apagado'
+            id: apa
+
+<NuevosJuegos>:
+    font_size: self.height * 0.45
+    bold: 'True'
+    color: 252/255, 252/255, 252/255, 1
+    text_size: self.size
+    halign: 'center'
+    valign: 'middle'
+    height: self.texture_size[1]
+    size: self.texture_size 
+
+<ListaNuevosJuegos>:
+    viewclass: 'NuevosJuegos'
+    RecycleBoxLayout:
+        default_size: None, dp(70)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height 
+        orientation: 'vertical'
+
+<ListaJuegos>:
+    size_hint: None, 0.4  
+    width: root.parent.width * 0.4  
+    viewclass: 'JuegoItem'
+    RecycleBoxLayout:
+        default_size: None, dp(70)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height 
+        orientation: 'vertical'
+
+<JuegoItem>:
+    canvas.before:
+        Color:
+            rgba: (5/255, 233/255, 245/255, 0.6) if self.seleccion else (0, 0, 0, 0)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    font_size: self.height * 0.25
+    text_size: self.size
+    halign: 'justify'
+    valign: 'middle'
+    bold: 'True'
+    padding: 10, 10
+    height: self.texture_size[1]  
+    size: self.texture_size 
+
+<Caratula>:
+    BoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'Images/Fondo.png'
+        
+        Image:
+            id: imagen_start
+            opacity: 1
+            size_hint: (0.6, 0.6)
+            source: 'Images/Presiona_Start-removebg-preview.png'
+            pos_hint: {"center_x": 0.5, "center_y": 0.5} 
+
+<Apagado>:
+    FloatLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: 13/255, 29/255, 29/255, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'Images/Fondo.png'
+        Label:
+            text: "¿Seguro que deseas apagar la consola?"
+            font_size: self.height * 0.15
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+            bold: 'True'
+            padding: 10, 10
+            height: self.texture_size[1]  
+            size: self.texture_size 
+            pos_hint: {"center_x": 0.5, "center_y": 0.6} 
+
+        Image:
+            size_hint: (0.3, 0.3)
+            source: 'Images/BotonA-removebg-preview.png'
+            pos_hint: {"center_x": 0.25, "center_y": 0.1} 
+
+        Image:
+            size_hint: (0.3, 0.3)
+            source: 'Images/PresionaBotonB.png'
+            pos_hint: {"center_x": 0.75, "center_y": 0.1}  
+
+<MenuCopiado>:
+    BoxLayout:
+        orientation: "vertical"
+        canvas.before:
+            Color:
+                rgba: 13/255, 29/255, 29/255, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'Images/Fondo.png'
+        Label:
+            text: "Copiando Tus Juegos"
+            font_size: self.height * 0.25
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+            bold: 'True'
+            padding: 10, 10
+            height: self.texture_size[1]  
+            size: self.texture_size 
+
+        Label:
+            text: "No desconectes la USB"
+            font_size: self.height * 0.25
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+            bold: 'True'
+            padding: 10, 10
+            height: self.texture_size[1]  
+            size: self.texture_size 
+
+        Label:
+            id: porcentaje
+            text: "0%"
+            font_size: self.height * 0.25
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+            bold: 'True'
+            padding: 10, 10
+            height: self.texture_size[1]  
+            size: self.texture_size 
+
+        ProgressBar:
+            id: barra
+            value: 0
+            min: 0
+            max: 100
+            pos_hint: {"center_x": 0.5, "center_y": 0.1} 
+            size_hint: (1, 1)
+
+<MenuNuevosJuegos>:
+    orientation: "vertical"
+    canvas.before:
+        Color:
+            rgba: 13/255, 29/255, 29/255, 1
+        Rectangle:
+            size: self.size
+            source: 'Images/Fondo.png'
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text: "NUEVOS JUEGOS DISPONIBLES"
+            font_size: self.height * 0.9
+            text_size: self.size
+            halign: 'center'
+            valign: 'middle'
+            bold: 'True'
+            height: self.texture_size[1]  
+            size: self.texture_size 
+            size_hint_y: 0.1
+        ListaNuevosJuegos:
+            id: recycleview_nuevosjuegos
+            size_hint_y: 0.8
+        Image:
+            size_hint: (0.3, 0.1)
+            source: 'Images/BotonA-removebg-preview.png'
+            pos_hint: {"center_x": 0.5, "center_y": 0.5} 
+
+<GBA@FloatLayout>:
+    Image:
+        size_hint: (0.7, 0.7)
+        source: 'Images/Icon_GBA.png'
+        pos_hint: {"center_x": 0.49, "center_y": 0.56} 
+
+<SNES@FloatLayout>:
+    Image:
+        size_hint: (0.7, 0.7)
+        source: 'Images/Icon_SNES.png'
+        pos_hint: {"center_x": 0.48, "center_y": 0.56} 
+
+<NES@FloatLayout>:
+    Image:
+        size_hint: (0.7, 0.7)
+        source: 'Images/Icon_NES.png'
+        pos_hint: {"center_x": 0.48, "center_y": 0.56} 
+
+<MenuConsolas>:
+    FloatLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'Images/Fondo.png'
+        
+        Image:
+            size_hint: (0.12, 0.12)
+            source: 'Images/PresionaSelect.png'
+            pos_hint: {"center_x": 0.075, "center_y": 0.975}
+
+        BoxLayout:
+            orientation: "vertical"
+            size: root.width, root.height
+
+            Image:
+                size_hint_y: 0.15
+                source: 'Images/DpadEscogerConsola.png'
+                pos_hint: {"center_x": 0.5, "center_y": 0.4} 
+
+            ScreenManager:
+                id: manager_centro
+                size_hint_y: 0.65
+
+                Screen:
+                    name: "primeraconsola"
+                    id: gameboy
+                    GBA:
+                        
+                Screen:
+                    name: "segundaconsola"
+                    id: supernin
+                    SNES:
+                    
+                Screen:  
+                    name: "terceraconsola"
+                    id: nin
+                    NES:
+
+            BoxLayout:
+                size_hint_y: 0.2
+                Image:
+                    size_hint: (0.7, 0.7) 
+                    source: 'Images/BotonA-removebg-preview.png'
+                    pos_hint: {"center_x": 0.5, "center_y": 0.3} 
+
+<MenuJuegos>:
+    FloatLayout:  
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: 'Images/Fondo2.png'
+
+        Image:
+            size_hint: (0.12, 0.12)
+            source: 'Images/PresionaSelect.png'
+            pos_hint: {"center_x": 0.075, "center_y": 0.975} 
+
+        Image:
+            size_hint: (0.3, 0.3)
+            source: 'Images/DpadEscogerConsola.png'
+            pos_hint: {"center_x": 0.485, "center_y": 0.925} 
+
+        Image:
+            size_hint: (0.3, 0.3)
+            source: 'Images/BotonA-removebg-preview.png'
+            pos_hint: {"center_x": 0.25, "center_y": 0.065} 
+        
+        ListaJuegos:
+            id: recycleview_juegos
+            size_hint: 0.29, 0.4 
+            width: root.width * 0.4  
+            pos_hint: {'center_x': 0.49, 'center_y': 0.61}  
+
+        Image:
+            size_hint: (0.3, 0.3)
+            source: 'Images/PresionaBotonB.png'
+            pos_hint: {"center_x": 0.75, "center_y": 0.065} 
