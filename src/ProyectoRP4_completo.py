@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Sebastián Vázquez
+# Copyright (c) 2025 Sebastián Vázquez, Rodrigo Valdes, Jesús Hernandez
 # This file is part of FSEM_ProyectoFinal and is licensed under the MIT License.
 # See the LICENSE file in the root of this repository for details.
 
