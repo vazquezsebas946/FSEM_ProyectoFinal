@@ -205,7 +205,10 @@ class MenuJuegos(Screen):
     def ejecutar_juego_seleccionado(self):
         juego = self.ids.recycleview_juegos.obtener_juego_actual()
         ruta_completa = os.path.join(self.ruta_juegos, juego)
-        self.juego_activo = subprocess.Popen(["mednafen", ruta_completa])
+        self.juego_activo = subprocess.run([
+        "sudo", "openvt", "-c", "2", "-f", "-s", "--",
+        "bash", "-c",
+        f"export HOME=/home/sebas; export USER=sebas; cd /home/sebas; /usr/games/mednafen '{ruta_completa}'"])
         Clock.schedule_interval(lambda dt: self.verificar_juego_activo(self.juego_activo), 1)
 
     def verificar_juego_activo(self, proceso):
@@ -214,19 +217,8 @@ class MenuJuegos(Screen):
         
         if proceso.poll() is not None:
             self.juego_activo = None
-            Window.restore()
-            subprocess.call(["wmctrl", "-a", "ProyectoFinal"])
+            subprocess.call(["sudo", "openvt", "-c", "1", "-f", "-s"])
             return False
-           
-"""
-    def ejecucion_controlada(self, ruta_total):
-        subprocess.run([
-        "sudo", "openvt", "-c", "2", "-f", "-s", "--",
-        "bash", "-c",
-        f"export HOME=/home/sebas; export USER=sebas; cd /home/sebas; /usr/games/mednafen '{ruta_total}'"])
-        time.sleep(2)
-        Window.close()
-        subprocess.run(["sudo", "chvt", "1"])"""
         
 class ProyectoFinal(App):
     def build(self):
@@ -322,8 +314,7 @@ def detectar_usb():
             if app.root.get_screen('MenuJuegos1').juego_activo:
                 app.root.get_screen('MenuJuegos1').juego_activo.terminate()
                 app.root.get_screen('MenuJuegos1').juego_activo = None
-                Window.restore()
-                subprocess.call(["wmctrl", "-a", "ProyectoFinal"])
+                subprocess.call(["sudo", "openvt", "-c", "1", "-f", "-s"])
             Clock.schedule_once(lambda dt: preparar_copiado())
             Manejador_USB.copiar_juegos(diccionario_juegos, usb_path, nombre_USB, callback_progreso)
 

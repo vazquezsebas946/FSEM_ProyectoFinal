@@ -4,7 +4,7 @@
 
 from collections import defaultdict
 import os
-#import pyudev
+import pyudev
 import time
 import subprocess as sp
 import shutil
