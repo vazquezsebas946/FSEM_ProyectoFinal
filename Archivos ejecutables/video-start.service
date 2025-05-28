@@ -1,0 +1,16 @@
+[Unit]
+Description=Splash screen
+DefaultDependencies=no
+After=local-fs.target
+Before=getty@tty1.service
+
+[Service]
+Type=oneshot
+ExecStart=/home/sebas/intro_video.sh
+RemainAfterExit=true
+StandardOutput=journal
+StandardError=journal
+TTYPath=/dev/tty1
+
+[Install]
+WantedBy=sysinit.target
