@@ -25,7 +25,8 @@ def get_mount_point(path):
     out = cp.stdout.split(" ")[0]
     return out
 
-def identificar_juegos(dir):
+def identificar_juegos(dir, nombre_dispositivo):
+    dir = os.path.join(dir, "Juegos")
     archivos = [f for f in os.listdir(dir) if f.lower().endswith(('.gba', '.smc', '.nes'))]
     if archivos:
         por_consola = defaultdict(list)
@@ -36,6 +37,7 @@ def identificar_juegos(dir):
             por_consola['.SNES'] = por_consola.pop('.SMC')
         return por_consola
     else:
+        auto_unmount("/dev/" + nombre_dispositivo)
         return archivos
     
 def copiar_juegos(diccionario_por_consola, origen, nombre_dispositivo, callback_progreso=None):
@@ -45,16 +47,30 @@ def copiar_juegos(diccionario_por_consola, origen, nombre_dispositivo, callback_
         juegos_copiados = 0
         for consola, juegos in diccionario_por_consola.items():
             for nombre_juego in juegos:
-                origen_completo = os.path.join(origen, nombre_juego)
+                origen_completo = os.path.join(origen, "Juegos", nombre_juego)
                 destino_unico = os.path.join(destino, consola[1:5], nombre_juego)
                 with open(origen_completo, "rb") as fsrc, open(destino_unico, "wb") as fdst:
                     shutil.copyfileobj(fsrc, fdst, length=64 * 1024)
+                copiar_caratulas(origen, nombre_juego)
                 juegos_copiados += 1
                 porcentaje = int((juegos_copiados / total_juegos) * 100)
 
                 if callback_progreso:
                     callback_progreso(diccionario_por_consola, porcentaje)
         auto_unmount("/dev/" + nombre_dispositivo)
+    else:
+        return
+    
+def copiar_caratulas(origen, juego):
+    global destino
+    destino_caratulas = os.path.join(destino, "Caratulas")
+    juego, _ = os.path.splitext(juego)
+    origen_caratulas = os.path.join(origen, "Caratulas")
+    ruta_caratula = os.path.join(origen_caratulas, juego + ".png")
+    destino_caratulas = os.path.join(destino_caratulas, juego + ".png")
+    if os.path.exists(ruta_caratula):
+        with open(ruta_caratula, "rb") as fsrc, open(destino_caratulas, "wb") as fdst:
+            shutil.copyfileobj(fsrc, fdst, length=64 * 1024)
     else:
         return
 
@@ -69,5 +85,5 @@ def main():
             continue
         auto_mount("/dev/" + device.sys_name)
         mp = get_mount_point("/dev/" + device.sys_name)
-        archivos_dicc = identificar_juegos(mp)
+        archivos_dicc = identificar_juegos(mp, device.sys_name)
         return mp, archivos_dicc, device.sys_name

@@ -93,6 +93,18 @@ class ListaJuegos(RecycleView):
             self.data[i]['seleccion'] = (i == indice)
         self.refresh_from_data()
         self.actualizar_scroll()
+        self.actualizar_caratula()
+
+    def actualizar_caratula(self):
+        juego, extension = os.path.splitext(self.obtener_juego_actual())
+        extension = extension[1:4]
+        if extension == "smc":
+            extension = "SNES"
+        ruta_caratula = os.path.join("/home/sebas/roms/Caratulas", juego + ".png")
+        if os.path.exists(ruta_caratula):
+            self.parent.parent.ids.caratula.source = ruta_caratula
+        else:
+            self.parent.parent.ids.caratula.source = "/home/sebas/roms/Caratulas/No_caratula" + extension + ".png"
 
     def obtener_juego_actual(self):
         if 0 <= self.indice_seleccionado < len(self.juegos):
